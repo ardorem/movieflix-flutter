@@ -12,6 +12,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        fontFamily: 'SCDream4',
         colorScheme: ColorScheme.fromSwatch(
           backgroundColor: const Color(0xFF272727),
         ),
@@ -23,7 +24,7 @@ class App extends StatelessWidget {
         focusColor: const Color(0xFFD7FE62),
         highlightColor: const Color(0xFFFF9454),
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -29,4 +29,44 @@ class ApiService {
     }
     throw Error();
   }
+
+  static Future<List<MovieModel>> getNowPlayingMovies() async {
+    List<MovieModel> movieInstance = [];
+    final url = Uri.parse('$baseUrl/$nowPlaying');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final movies = jsonData['results'];
+      // print(movies);
+      for (var movie in movies) {
+        movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
+        movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
+        movieInstance.add(
+          MovieModel.fromJson(movie),
+        );
+      }
+      return movieInstance;
+    }
+    throw Error();
+  }
+
+  static Future<List<MovieModel>> getComingSoonMovies() async {
+    List<MovieModel> movieInstance = [];
+    final url = Uri.parse('$baseUrl/$comingSoon');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final movies = jsonData['results'];
+      // print(movies);
+      for (var movie in movies) {
+        movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
+        movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
+        movieInstance.add(
+          MovieModel.fromJson(movie),
+        );
+      }
+      return movieInstance;
+    }
+    throw Error();
+  }
 }
