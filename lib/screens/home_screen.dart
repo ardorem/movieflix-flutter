@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movieflix/models/movie_detail_model.dart';
 import 'package:movieflix/models/movie_model.dart';
 import 'package:movieflix/services/api_services.dart';
+import 'package:movieflix/widgets/movie_land_scape_size_widget.dart';
+import 'package:movieflix/widgets/movie_portrait_size_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({
@@ -12,6 +15,7 @@ class HomeScreen extends StatelessWidget {
       ApiService.getNowPlayingMovies();
   final Future<List<MovieModel>> comingSoonMovies =
       ApiService.getComingSoonMovies();
+  final Future<MovieDetailModel> test = ApiService.getDetailMovies(385687);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              //----------------------------------------------------Popular Movies
               FutureBuilder(
                 future: popularMovies,
                 builder: (context, snapshot) {
@@ -61,48 +66,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 300,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              var movie = snapshot.data![index];
-                              return Column(
-                                children: [
-                                  Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    width: 350,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFFD4D4D4)
-                                              .withOpacity(0.5),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 1),
-                                        )
-                                      ],
-                                    ),
-                                    child: Image.network(movie.backdropPath),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    movie.title,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              width: 40,
-                            ),
-                          ),
+                          child: makeList(snapshot, isLandScapeSize: true),
                         ),
                       ],
                     );
@@ -149,54 +113,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 340,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              var movie = snapshot.data![index];
-                              return Column(
-                                children: [
-                                  Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFFD4D4D4)
-                                              .withOpacity(0.5),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 1),
-                                        )
-                                      ],
-                                    ),
-                                    child: Image.network(movie.posterPath),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    width: 170,
-                                    child: Text(
-                                      movie.title,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.fade,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              width: 10,
-                            ),
-                          ),
+                          child: makeList(snapshot, isLandScapeSize: false),
                         ),
                       ],
                     );
@@ -243,54 +160,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 340,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              var movie = snapshot.data![index];
-                              return Column(
-                                children: [
-                                  Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFFD4D4D4)
-                                              .withOpacity(0.5),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 1),
-                                        )
-                                      ],
-                                    ),
-                                    child: Image.network(movie.posterPath),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    width: 170,
-                                    child: Text(
-                                      movie.title,
-                                      textAlign: TextAlign.center,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.fade,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              width: 10,
-                            ),
-                          ),
+                          child: makeList(snapshot, isLandScapeSize: false),
                         ),
                       ],
                     );
@@ -307,5 +177,27 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+//---------------------------------------------------------------------- makeList()
+  ListView makeList(AsyncSnapshot<List<MovieModel>> snapshot,
+      {required bool isLandScapeSize}) {
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      scrollDirection: Axis.horizontal,
+      itemCount: snapshot.data!.length,
+      itemBuilder: isLandScapeSize
+          ? (context, index) {
+              var movie = snapshot.data![index];
+              return MovieLandScapeSize(movie: movie);
+            }
+          : (context, index) {
+              var movie = snapshot.data![index];
+              return MoviePortraitSize(movie: movie);
+            },
+      separatorBuilder: (context, index) => const SizedBox(
+        width: 40,
+      ),
+    );
   }
 }

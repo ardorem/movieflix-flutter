@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:movieflix/models/movie_detail_model.dart';
 import 'package:movieflix/models/movie_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,6 +9,7 @@ class ApiService {
   static const String popular = "popular";
   static const String nowPlaying = "now-playing";
   static const String comingSoon = "coming-soon";
+  static const String detail = "movie?id=";
   static const String movieImageUrl = "https://image.tmdb.org/t/p/w500";
 
   static Future<List<MovieModel>> getPopularMovies() async {
@@ -17,7 +19,6 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final movies = jsonData['results'];
-      // print(movies);
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
@@ -37,7 +38,6 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final movies = jsonData['results'];
-      // print(movies);
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
@@ -57,7 +57,6 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       final movies = jsonData['results'];
-      // print(movies);
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
@@ -66,6 +65,27 @@ class ApiService {
         );
       }
       return movieInstance;
+    }
+    throw Error();
+  }
+
+  static Future<MovieDetailModel> getDetailMovies(int id) async {
+    final MovieDetailModel movie;
+    final List<String> genres = [];
+    final url = Uri.parse('$baseUrl/$detail$id');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var movieFromJson = jsonDecode(response.body);
+      movieFromJson['backdrop_path'] =
+          "$movieImageUrl${movieFromJson['backdrop_path']}";
+      movieFromJson['poster_path'] =
+          "$movieImageUrl${movieFromJson['poster_path']}";
+      for (var genre in movieFromJson['genres']) {
+        genres.add(genre['name']);
+      }
+      movieFromJson['genres'] = genres;
+      movie = MovieDetailModel.fromJson(movieFromJson);
+      return movie;
     }
     throw Error();
   }
