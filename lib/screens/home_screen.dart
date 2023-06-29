@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movieflix/models/movie_detail_model.dart';
 import 'package:movieflix/models/movie_model.dart';
 import 'package:movieflix/services/api_services.dart';
 import 'package:movieflix/widgets/movie_land_scape_size_widget.dart';
@@ -15,7 +14,6 @@ class HomeScreen extends StatelessWidget {
       ApiService.getNowPlayingMovies();
   final Future<List<MovieModel>> comingSoonMovies =
       ApiService.getComingSoonMovies();
-  final Future<MovieDetailModel> test = ApiService.getDetailMovies(385687);
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +187,11 @@ class HomeScreen extends StatelessWidget {
       itemBuilder: isLandScapeSize
           ? (context, index) {
               var movie = snapshot.data![index];
-              return MovieLandScapeSize(movie: movie);
+              return MovieLandScapeSize(
+                title: movie.title,
+                backdropPath: movie.backdropPath,
+                id: movie.id,
+              );
             }
           : (context, index) {
               var movie = snapshot.data![index];

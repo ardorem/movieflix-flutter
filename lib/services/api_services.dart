@@ -22,6 +22,8 @@ class ApiService {
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
+        movie['id'] = movie['id'].toString();
+
         movieInstance.add(
           MovieModel.fromJson(movie),
         );
@@ -41,6 +43,7 @@ class ApiService {
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
+        movie['id'] = movie['id'].toString();
         movieInstance.add(
           MovieModel.fromJson(movie),
         );
@@ -60,6 +63,7 @@ class ApiService {
       for (var movie in movies) {
         movie['backdrop_path'] = "$movieImageUrl${movie['backdrop_path']}";
         movie['poster_path'] = "$movieImageUrl${movie['poster_path']}";
+        movie['id'] = movie['id'].toString();
         movieInstance.add(
           MovieModel.fromJson(movie),
         );
@@ -69,7 +73,7 @@ class ApiService {
     throw Error();
   }
 
-  static Future<MovieDetailModel> getDetailMovies(int id) async {
+  static Future<MovieDetailModel> getDetailMovies(String id) async {
     final MovieDetailModel movie;
     final List<String> genres = [];
     final url = Uri.parse('$baseUrl/$detail$id');
@@ -80,11 +84,14 @@ class ApiService {
           "$movieImageUrl${movieFromJson['backdrop_path']}";
       movieFromJson['poster_path'] =
           "$movieImageUrl${movieFromJson['poster_path']}";
+      movieFromJson['vote_average'] =
+          (movieFromJson['vote_average'] / 2).round();
       for (var genre in movieFromJson['genres']) {
         genres.add(genre['name']);
       }
       movieFromJson['genres'] = genres;
       movie = MovieDetailModel.fromJson(movieFromJson);
+      print(movie.voteAverage);
       return movie;
     }
     throw Error();

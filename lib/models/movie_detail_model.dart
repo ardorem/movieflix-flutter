@@ -1,7 +1,6 @@
 class MovieDetailModel {
   String originalTitle, overview, backdropPath, posterPath;
-  int runtime;
-  double voteAverage;
+  int runtime, voteAverage;
   List<String> genres;
 
   MovieDetailModel.fromJson(Map<String, dynamic> json)

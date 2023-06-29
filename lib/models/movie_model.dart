@@ -1,6 +1,5 @@
 class MovieModel {
-  String title, backdropPath, posterPath;
-  int id;
+  String id, title, backdropPath, posterPath;
 
   MovieModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
